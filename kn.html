@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>猫猫和兔兔的2025年总结</title>
+    <title>猫猫和兔兔的2025年终总结</title>
     <style>
         body {
             margin: 0;
@@ -82,19 +82,14 @@
         const color = cat.color;
         
         if (cat.pose === 'front') {
-            // 尾巴
             ctx.beginPath(); ctx.moveTo(30, 20); ctx.quadraticCurveTo(50, -10, 40, -30);
             ctx.lineWidth = 8; ctx.strokeStyle = color; ctx.lineCap = 'round'; ctx.stroke();
-            // 身体
             drawEllipse(0, 25, 38, 30, color); drawEllipse(0, 28, 22, 20, '#FFF8DC');
-            // 头
             drawEllipse(0, -10, 35, 30, color);
-            // 耳朵
             ctx.fillStyle = color;
             ctx.beginPath(); ctx.moveTo(-28, -20); ctx.lineTo(-40, -55); ctx.lineTo(-10, -35); ctx.fill();
             ctx.beginPath(); ctx.moveTo(28, -20); ctx.lineTo(40, -55); ctx.lineTo(10, -35); ctx.fill();
 
-            // 表情
             if (cat.expression === 'sad') {
                 ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.moveTo(-20, -15); ctx.lineTo(-10, -10); ctx.stroke();
@@ -109,18 +104,15 @@
                 ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.arc(-15, -10, 6, 0.1*Math.PI, 0.9*Math.PI); ctx.stroke();
                 ctx.beginPath(); ctx.arc(15, -10, 6, 0.1*Math.PI, 0.9*Math.PI); ctx.stroke();
-                // 修复1：享受时的嘴巴
                 ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-3,3); ctx.moveTo(0,0); ctx.lineTo(3,3); ctx.stroke();
                 drawEllipse(-25, 0, 6, 4, 'rgba(255,100,100,0.3)'); drawEllipse(25, 0, 6, 4, 'rgba(255,100,100,0.3)');
-            } else { // happy (黄色状态)
+            } else { 
                 ctx.fillStyle = '#000';
                 ctx.beginPath(); ctx.arc(-12, -12, 4, 0, Math.PI*2); ctx.fill();
                 ctx.beginPath(); ctx.arc(12, -12, 4, 0, Math.PI*2); ctx.fill();
-                // 修复1：变黄后的嘴巴回来了！
                 ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-3,3); ctx.moveTo(0,0); ctx.lineTo(3,3); ctx.stroke();
             }
-            // 胡须
             ctx.strokeStyle = '#555'; ctx.lineWidth = 1;
             ctx.beginPath(); 
             ctx.moveTo(-20, 0); ctx.lineTo(-45, -5); ctx.moveTo(-20, 5); ctx.lineTo(-45, 10);
@@ -179,46 +171,45 @@
         ctx.restore();
     }
 
-    // --- 道具绘制 (修复2：具体的鱼和胡萝卜) ---
-    function drawProps() {
+    // --- 背景道具 (在角色后面) ---
+    function drawBackProps() {
         const mx = WIDTH/2; const fy = HEIGHT - 130;
-        
-        if (state.scene === 'eating') {
-            // 猫碗
-            ctx.fillStyle = '#E0E0E0'; ctx.beginPath(); ctx.arc(mx-70, fy+30, 22, 0, Math.PI, false); ctx.fill();
-            // 修复2：画一条鱼
-            ctx.fillStyle = '#87CEEB'; // 蓝鱼
-            ctx.beginPath(); ctx.ellipse(mx-70, fy+28, 15, 8, 0, 0, Math.PI*2); ctx.fill(); // 鱼身
-            ctx.beginPath(); ctx.moveTo(mx-85, fy+28); ctx.lineTo(mx-95, fy+20); ctx.lineTo(mx-95, fy+36); ctx.fill(); // 鱼尾
-
-            // 兔碗
-            ctx.fillStyle = '#E0E0E0'; ctx.beginPath(); ctx.arc(mx+70, fy+30, 22, 0, Math.PI, false); ctx.fill();
-            // 修复2：画一个胡萝卜
-            ctx.fillStyle = '#FF4500'; // 橙色
-            ctx.beginPath(); ctx.moveTo(mx+60, fy+25); ctx.lineTo(mx+85, fy+30); ctx.lineTo(mx+60, fy+35); ctx.fill(); // 萝卜身
-            ctx.fillStyle = '#228B22'; // 绿色叶子
-            ctx.beginPath(); ctx.moveTo(mx+85, fy+30); ctx.lineTo(mx+95, fy+25); ctx.lineTo(mx+95, fy+35); ctx.fill();
-        } 
-        else if (state.scene === 'reading') {
+        if (state.scene === 'reading') {
             ctx.fillStyle = '#8B4513'; ctx.fillRect(mx-100, fy+20, 200, 10);
             ctx.fillStyle = '#DEB887'; ctx.beginPath(); ctx.ellipse(mx, fy+20, 110, 20, 0, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = '#FFF'; ctx.fillRect(mx-15, fy, 30, 20);
             ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.strokeRect(mx-15, fy, 30, 20);
         }
         else if (state.scene === 'sleeping') {
-            ctx.fillStyle = '#FFB6C1'; ctx.beginPath(); ctx.roundRect(mx-110, fy-20, 220, 60, 10); ctx.fill(); // 床变宽一点
+            ctx.fillStyle = '#FFB6C1'; ctx.beginPath(); ctx.roundRect(mx-110, fy-20, 220, 60, 10); ctx.fill();
             ctx.fillStyle = '#FFF'; 
             ctx.beginPath(); ctx.roundRect(mx-90, fy-30, 50, 20, 5); ctx.fill();
             ctx.beginPath(); ctx.roundRect(mx+40, fy-30, 50, 20, 5); ctx.fill();
         }
     }
     
-    // 覆盖在最上层的道具(被子)
-    function drawOverlays() {
+    // --- 前景道具 (在角色前面：被子、食物) ---
+    function drawForeProps() {
         const mx = WIDTH/2; const fy = HEIGHT - 130;
+        
+        // 修复点：吃饭的道具移到这里，确保在最上层
+        if (state.scene === 'eating') {
+            // 猫碗 & 鱼
+            ctx.fillStyle = '#E0E0E0'; ctx.beginPath(); ctx.arc(mx-70, fy+35, 22, 0, Math.PI, false); ctx.fill();
+            ctx.fillStyle = '#87CEEB';
+            ctx.beginPath(); ctx.ellipse(mx-70, fy+33, 15, 8, 0, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(mx-85, fy+33); ctx.lineTo(mx-95, fy+25); ctx.lineTo(mx-95, fy+41); ctx.fill();
+
+            // 兔碗 & 萝卜
+            ctx.fillStyle = '#E0E0E0'; ctx.beginPath(); ctx.arc(mx+70, fy+35, 22, 0, Math.PI, false); ctx.fill();
+            ctx.fillStyle = '#FF4500';
+            ctx.beginPath(); ctx.moveTo(mx+60, fy+30); ctx.lineTo(mx+85, fy+35); ctx.lineTo(mx+60, fy+40); ctx.fill();
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath(); ctx.moveTo(mx+85, fy+35); ctx.lineTo(mx+95, fy+30); ctx.lineTo(mx+95, fy+40); ctx.fill();
+        }
+
         if (state.scene === 'sleeping') {
-             // 修复3：被子位置下移，露出脑袋
-             const blanketY = fy + 25; // 下移到脖子位置
+             const blanketY = fy + 25;
              ctx.fillStyle = 'rgba(255, 240, 245, 0.95)';
              ctx.beginPath(); ctx.roundRect(mx-110, blanketY, 220, 50, 8); ctx.fill();
         }
@@ -279,7 +270,7 @@
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         drawSceneBackground();
         drawButterfly();
-        drawProps(); 
+        drawBackProps(); // 背景道具 (桌子、床架)
 
         ctx.globalAlpha = state.textOpacity;
         ctx.fillStyle = (state.scene === 'night' || state.scene === 'kiss') ? '#FFF' : '#555';
@@ -292,7 +283,7 @@
 
         drawCat(state.cat);
         drawRabbit(state.rabbit);
-        drawOverlays(); // 被子在最上层
+        drawForeProps(); // 前景道具 (食物、被子) - 确保在最前面
 
         state.hearts.forEach((h, i) => {
             h.y -= 1; h.alpha -= 0.02;
@@ -356,7 +347,7 @@
           .to(state.cat, { color: '#FFA500', expression: 'happy', stripes: true, duration: 1 }) 
           .set(state, { subText: "猫猫变干净了！" });
 
-        // 3. 吃饭 (具象化)
+        // 3. 吃饭 (鱼和胡萝卜)
         tl.to(state, { textOpacity: 0 }, "+=1")
           .set(state, { scene: 'eating', mainText: "一起吃饭", subText: "猫猫吃鱼，兔兔吃胡萝卜" })
           .to(state, { textOpacity: 1 })
@@ -400,7 +391,7 @@
           .set(state.rabbit, { pose: 'side_left' })
           .to(state.cat, { x: midX - 45, duration: 1 })
           .to(state.rabbit, { x: midX + 45, duration: 1 }, "<")
-          .set(state, { scene: 'kiss', mainText: "✨ 2026 新年快乐！✨", subText: "我们会永远在一起。" })
+          .set(state, { scene: 'kiss', mainText: "✨ 2026 新年快乐！✨", subText: "兔兔有猫猫，猫猫有兔兔了yeah。" })
           .call(() => spawnHeart(midX, floorY - 60))
           .call(() => { replayBtn.style.display = 'block'; }, null, "+=5");
     }
